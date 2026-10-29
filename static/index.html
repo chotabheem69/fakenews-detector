@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VeritasAI — Advanced AI Fake News & Misinformation Detector</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <!-- Top Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="brand">
+                <div class="brand-icon">
+                    <i data-lucide="shield-alert"></i>
+                </div>
+                <div class="brand-text">
+                    <span class="brand-title">Veritas<span class="accent-text">AI</span></span>
+                    <span class="brand-badge">BERT + LLM</span>
+                </div>
+            </div>
+
+            <!-- Main Tabs -->
+            <div class="nav-tabs">
+                <button class="nav-tab active" data-tab="detector">
+                    <i data-lucide="scan"></i> Live Detector
+                </button>
+                <button class="nav-tab" data-tab="compare">
+                    <i data-lucide="columns"></i> Compare
+                </button>
+                <button class="nav-tab" data-tab="dataset">
+                    <i data-lucide="database"></i> IEEE Dataset
+                </button>
+                <button class="nav-tab" data-tab="history">
+                    <i data-lucide="bar-chart-2"></i> Analytics & History
+                </button>
+                <button class="nav-tab" data-tab="architecture">
+                    <i data-lucide="cpu"></i> BERT Architecture
+                </button>
+            </div>
+
+            <!-- Right Controls -->
+            <div class="nav-controls">
+                <div class="status-indicator" id="engineStatus" title="System Status">
+                    <span class="status-dot"></span>
+                    <span class="status-label">BERT Ready</span>
+                </div>
+                <button class="icon-button" id="openSettingsBtn" title="API Key & Settings">
+                    <i data-lucide="settings"></i>
+                </button>
+                <button class="icon-button" id="themeToggleBtn" title="Toggle Theme">
+                    <i data-lucide="moon" id="themeIcon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+        <!-- ============================================================== -->
+        <!-- TAB 1: LIVE DETECTOR -->
+        <!-- ============================================================== -->
+        <section class="tab-panel active" id="tab-detector">
+            <div class="hero-section">
+                <div class="hero-badge">
+                    <i data-lucide="sparkles"></i> Deep Forensic Misinformation Intelligence
+                </div>
+                <h1 class="hero-title">Distinguish Truth From Fiction With <span class="gradient-text">Neural NLP</span></h1>
+                <p class="hero-subtitle">
+                    Harness fine-tuned BERT transformer sequence classification, stylometric bias analysis, and Google Gemini deep factual cross-referencing.
+                </p>
+            </div>
+
+            <!-- Quick Benchmark Samples Bar -->
+            <div class="quick-samples-container">
+                <span class="quick-samples-label"><i data-lucide="zap"></i> Quick Presets:</span>
+                <div class="sample-chips" id="sampleChips">
+                    <!-- Dynamically populated via JS -->
+                    <button class="chip chip-loading">Loading presets...</button>
+                </div>
+            </div>
+
+            <!-- Analysis Input Card -->
+            <div class="glass-card input-card">
+                <div class="input-header">
+                    <div class="mode-toggles">
+                        <button class="mode-toggle active" id="modeTextBtn">
+                            <i data-lucide="file-text"></i> Headline & Text
+                        </button>
+                        <button class="mode-toggle" id="modeUrlBtn">
+                            <i data-lucide="link"></i> Web Article URL
+                        </button>
+                    </div>
+
+                    <!-- Deep Check Toggle -->
+                    <div class="deep-check-toggle-wrapper">
+                        <label class="switch-container" title="Use FreeLLMAPI or Gemini for deep claim-by-claim factual verification">
+                            <input type="checkbox" id="deepCheckCheckbox" checked>
+                            <span class="switch-slider"></span>
+                            <span class="switch-text">
+                                <i data-lucide="brain"></i> Deep AI Fact-Check
+                                <span class="api-status-badge" id="apiKeyStatusBadge">No Key</span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Text Mode Form -->
+                <div class="form-body" id="textModeForm">
+                    <div class="input-group">
+                        <label for="headlineInput">Headline or Title <span class="optional">(Optional)</span></label>
+                        <input type="text" id="headlineInput" placeholder="e.g. Scientists announce major breakthrough in clean fusion energy...">
+                    </div>
+                    <div class="input-group">
+                        <label for="contentInput">News Article Content or Social Post <span class="required">*</span></label>
+                        <textarea id="contentInput" rows="5" placeholder="Paste full article text, social media claims, or press releases here for deep forensic analysis..."></textarea>
+                    </div>
+                </div>
+
+                <!-- URL Mode Form -->
+                <div class="form-body hidden" id="urlModeForm">
+                    <div class="input-group">
+                        <label for="urlInput">News Article URL <span class="required">*</span></label>
+                        <div class="url-input-wrapper">
+                            <i data-lucide="globe" class="url-icon"></i>
+                            <input type="url" id="urlInput" placeholder="https://www.reuters.com/world/... or https://bbc.com/news/...">
+                        </div>
+                        <small class="helper-text">Our scraper will automatically extract the headline, body text, and analyze domain reputation.</small>
+                    </div>
+                </div>
+
+                <!-- Action Footer -->
+                <div class="input-footer">
+                    <div class="char-counter">
+                        <span id="charCount">0</span> characters
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn btn-secondary" id="clearInputBtn">
+                            <i data-lucide="rotate-ccw"></i> Clear
+                        </button>
+                        <button class="btn btn-primary" id="analyzeBtn">
+                            <i data-lucide="search-check"></i> Analyze News
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading State -->
+            <div class="loading-state hidden" id="loadingState">
+                <div class="pulse-ring"></div>
+                <div class="loading-text">
+                    <h3 id="loadingStageTitle">Evaluating Transformer Weights...</h3>
+                    <p id="loadingStageDesc">BERT sequence classification & stylometric scan in progress</p>
+                </div>
+            </div>
+
+            <!-- ============================================================== -->
+            <!-- RESULTS VIEW -->
+            <!-- ============================================================== -->
+            <div class="results-container hidden" id="resultsContainer">
+                
+                <!-- Main Verdict Banner -->
+                <div class="verdict-banner" id="verdictBanner">
+                    <div class="verdict-icon-container" id="verdictIcon">
+                        <i data-lucide="shield-check"></i>
+                    </div>
+                    <div class="verdict-info">
+                        <div class="verdict-badge" id="verdictBadge">LIKELY AUTHENTIC</div>
+                        <h2 class="verdict-headline" id="verdictHeadline">Article Exhibits High Journalistic Credibility</h2>
+                        <p class="verdict-subtext" id="verdictSubtext">Balanced language, lack of sensationalism, and high source attribution density.</p>
+                    </div>
+                    <div class="credibility-radial-wrapper">
+                        <div class="radial-score-box">
+                            <span class="radial-score-val" id="credibilityScoreVal">94%</span>
+                            <span class="radial-score-label">Truth Score</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4 Core Pillars Grid -->
+                <div class="metrics-grid">
+                    <!-- Metric 1: Sensationalism -->
+                    <div class="metric-card glass-card">
+                        <div class="metric-header">
+                            <span class="metric-title"><i data-lucide="flame"></i> Sensationalism</span>
+                            <span class="metric-val" id="sensationalismVal">12%</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill fill-sensational" id="sensationalismBar" style="width: 12%"></div>
+                        </div>
+                        <span class="metric-desc" id="sensationalismDesc">Neutral & balanced vocabulary</span>
+                    </div>
+
+                    <!-- Metric 2: Clickbait -->
+                    <div class="metric-card glass-card">
+                        <div class="metric-header">
+                            <span class="metric-title"><i data-lucide="mouse-pointer-click"></i> Clickbait Level</span>
+                            <span class="metric-val" id="clickbaitVal">8%</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill fill-clickbait" id="clickbaitBar" style="width: 8%"></div>
+                        </div>
+                        <span class="metric-desc" id="clickbaitDesc">No engagement-bait patterns detected</span>
+                    </div>
+
+                    <!-- Metric 3: Bias & Conspiracy -->
+                    <div class="metric-card glass-card">
+                        <div class="metric-header">
+                            <span class="metric-title"><i data-lucide="alert-triangle"></i> Bias & Conspiracy</span>
+                            <span class="metric-val" id="biasVal">5%</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill fill-bias" id="biasBar" style="width: 5%"></div>
+                        </div>
+                        <span class="metric-desc" id="biasDesc">No conspiracy markers found</span>
+                    </div>
+
+                    <!-- Metric 4: Source Attribution -->
+                    <div class="metric-card glass-card">
+                        <div class="metric-header">
+                            <span class="metric-title"><i data-lucide="bookmark-check"></i> Attribution Quality</span>
+                            <span class="metric-val" id="attributionVal">85%</span>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill fill-attribution" id="attributionBar" style="width: 85%"></div>
+                        </div>
+                        <span class="metric-desc" id="attributionDesc">Verified institutions & named sources</span>
+                    </div>
+                </div>
+
+                <!-- Explainable AI (XAI) Text Highlighting Card -->
+                <div class="glass-card xai-card">
+                    <div class="card-header">
+                        <div class="header-title">
+                            <i data-lucide="highlighter"></i>
+                            <h3>Explainable AI (XAI) Token Highlighter</h3>
+                        </div>
+                        <div class="xai-legend">
+                            <span class="legend-item"><span class="badge-dot dot-sensational"></span> Sensationalism</span>
+                            <span class="legend-item"><span class="badge-dot dot-bias"></span> Bias / Conspiracy</span>
+                            <span class="legend-item"><span class="badge-dot dot-clickbait"></span> Clickbait Phrase</span>
+                        </div>
+                    </div>
+                    <div class="highlighted-text-box" id="highlightedTextBox">
+                        <!-- Highlighting rendered by JavaScript -->
+                    </div>
+                    <div class="flags-summary" id="flagsSummary">
+                        <!-- Dynamic list of flags -->
+                    </div>
+                </div>
+
+                <!-- Gemini Deep Forensic Audit Card -->
+                <div class="glass-card gemini-audit-card" id="geminiAuditCard">
+                    <div class="card-header">
+                        <div class="header-title">
+                            <i data-lucide="bot"></i>
+                            <h3>Google Gemini Deep AI Fact-Check</h3>
+                            <span class="pill-badge" id="geminiModelBadge">Gemini 2.5 Flash</span>
+                        </div>
+                    </div>
+                    
+                    <div class="gemini-audit-content" id="geminiAuditContent">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Export & Share Toolbar -->
+                <div class="results-toolbar">
+                    <button class="btn btn-secondary" id="copyReportBtn">
+                        <i data-lucide="copy"></i> Copy Full Report
+                    </button>
+                    <button class="btn btn-secondary" id="downloadJsonBtn">
+                        <i data-lucide="download"></i> Download JSON
+                    </button>
+                    <a href="#" target="_blank" class="btn btn-secondary" id="googleVerifyBtn">
+                        <i data-lucide="external-link"></i> Cross-Check on Google
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- ============================================================== -->
+        <!-- TAB 2: SIDE-BY-SIDE COMPARISON -->
+        <!-- ============================================================== -->
+        <section class="tab-panel" id="tab-compare">
+            <div class="hero-section">
+                <div class="hero-badge"><i data-lucide="git-compare"></i> A/B Credibility Benchmarking</div>
+                <h1 class="hero-title">Compare Two News Stories Side-by-Side</h1>
+                <p class="hero-subtitle">
+                    Compare an unedited viral post against an established news wire report to inspect how linguistic framing affects credibility scores.
+                </p>
+            </div>
+
+            <div class="compare-grid">
+                <!-- Version A -->
+                <div class="glass-card compare-column">
+                    <div class="column-header">
+                        <h3>Article Version A (Original / Suspect)</h3>
+                        <button class="btn-text" id="loadSampleABtn">Load Fake Sample</button>
+                    </div>
+                    <input type="text" id="compareTitleA" class="compare-input" placeholder="Headline A...">
+                    <textarea id="compareTextA" rows="8" class="compare-textarea" placeholder="Paste Version A content..."></textarea>
+                    <button class="btn btn-primary full-width" id="analyzeCompareBtnA">Analyze Version A</button>
+                    <div class="compare-result hidden" id="compareResultA"></div>
+                </div>
+
+                <!-- Version B -->
+                <div class="glass-card compare-column">
+                    <div class="column-header">
+                        <h3>Article Version B (Alternative / Fact-Checked)</h3>
+                        <button class="btn-text" id="loadSampleBBtn">Load Real Sample</button>
+                    </div>
+                    <input type="text" id="compareTitleB" class="compare-input" placeholder="Headline B...">
+                    <textarea id="compareTextB" rows="8" class="compare-textarea" placeholder="Paste Version B content..."></textarea>
+                    <button class="btn btn-primary full-width" id="analyzeCompareBtnB">Analyze Version B</button>
+                    <div class="compare-result hidden" id="compareResultB"></div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ============================================================== -->
+        <!-- TAB: IEEE DATAPORT DATASET EXPLORER -->
+        <!-- ============================================================== -->
+        <section class="tab-panel" id="tab-dataset">
+            <div class="hero-section">
+                <div class="hero-badge">
+                    <i data-lucide="database"></i> Official Resource: IEEE DataPort Fake News Dataset
+                </div>
+                <h1 class="hero-title">Real & Fake News in the Market</h1>
+                <p class="hero-subtitle">
+                    Explore curated articles directly from the <a href="https://ieee-dataport.org/documents/fake-news-dataset" target="_blank" rel="noopener" class="external-link">IEEE DataPort Fake News Dataset</a>. Filter by category, inspect deception markers, or test any item in the neural detector with 1 click.
+                </p>
+            </div>
+
+            <!-- IEEE Dataset Insights Bar -->
+            <div class="stats-overview-grid">
+                <div class="glass-card stat-box">
+                    <span class="stat-number" id="dsTotalArticles">12</span>
+                    <span class="stat-label">Market Articles</span>
+                </div>
+                <div class="glass-card stat-box">
+                    <span class="stat-number text-danger" id="dsFakeArticles">6</span>
+                    <span class="stat-label">Viral Deceptive News</span>
+                </div>
+                <div class="glass-card stat-box">
+                    <span class="stat-number text-success" id="dsRealArticles">6</span>
+                    <span class="stat-label">Verified News Wires</span>
+                </div>
+                <div class="glass-card stat-box">
+                    <span class="stat-number text-accent" id="dsAvgWords">68</span>
+                    <span class="stat-label">Avg Words / Article</span>
+                </div>
+            </div>
+
+            <!-- Filter & Search Toolbar -->
+            <div class="glass-card dataset-toolbar">
+                <div class="search-input-box">
+                    <i data-lucide="search"></i>
+                    <input type="text" id="datasetSearchInput" placeholder="Search by headline, keyword, or topic (e.g. cancer, 5G, NASA)...">
+                </div>
+                <div class="filter-controls">
+                    <select id="datasetCategoryFilter" class="form-select">
+                        <option value="All">All Categories</option>
+                    </select>
+                    <select id="datasetLabelFilter" class="form-select">
+                        <option value="All">All Verdicts</option>
+                        <option value="REAL">Verified Real Only</option>
+                        <option value="FAKE">Deceptive / Fake Only</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Dataset Cards Grid -->
+            <div class="dataset-grid" id="datasetCardsContainer">
+                <div class="text-center text-muted" style="grid-column: 1 / -1; padding: 2rem;">Loading IEEE DataPort articles...</div>
+            </div>
+
+            <!-- Pagination Bar -->
+            <div class="pagination-bar">
+                <button class="btn btn-secondary btn-sm" id="prevPageBtn" disabled>
+                    <i data-lucide="chevron-left"></i> Previous
+                </button>
+                <span class="page-indicator" id="pageIndicator">Page 1 of 1</span>
+                <button class="btn btn-secondary btn-sm" id="nextPageBtn" disabled>
+                    Next <i data-lucide="chevron-right"></i>
+                </button>
+            </div>
+
+            <!-- IEEE Dataset Source Card -->
+            <div class="glass-card dataset-info-card">
+                <div class="card-header">
+                    <div class="header-title">
+                        <i data-lucide="book-open"></i>
+                        <h3>About the IEEE DataPort Fake News Benchmark</h3>
+                    </div>
+                    <a href="https://ieee-dataport.org/documents/fake-news-dataset" target="_blank" rel="noopener" class="btn btn-secondary btn-sm">
+                        <i data-lucide="external-link"></i> Visit IEEE DataPort
+                    </a>
+                </div>
+                <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.7;">
+                    The <strong>IEEE DataPort Fake News Dataset</strong> is an open-access scientific resource compiled to benchmark machine learning and NLP sequence classification algorithms. It includes verified news wire statements from authoritative organizations (WHO, NASA, AP, Reuters) paired against deceptive media, conspiracy claims, and hyper-partisan clickbait circulating across social channels.
+                </p>
+            </div>
+        </section>
+
+
+        <!-- ============================================================== -->
+        <!-- TAB 3: ANALYTICS & HISTORY -->
+        <!-- ============================================================== -->
+        <section class="tab-panel" id="tab-history">
+            <div class="hero-section">
+                <div class="hero-badge"><i data-lucide="database"></i> Forensic Analytics</div>
+                <h1 class="hero-title">Scan History & Intelligence Dashboard</h1>
+                <p class="hero-subtitle">Review previous scans, export audit records, and monitor misinformation distribution statistics.</p>
+            </div>
+
+            <!-- Stats Overview Cards -->
+            <div class="stats-overview-grid">
+                <div class="glass-card stat-box">
+                    <span class="stat-number" id="statTotalScans">0</span>
+                    <span class="stat-label">Total News Scanned</span>
+                </div>
+                <div class="glass-card stat-box">
+                    <span class="stat-number text-danger" id="statFakeCount">0</span>
+                    <span class="stat-label">Fake News Flagged</span>
+                </div>
+                <div class="glass-card stat-box">
+                    <span class="stat-number text-success" id="statRealCount">0</span>
+                    <span class="stat-label">Verified Real Articles</span>
+                </div>
+                <div class="glass-card stat-box">
+                    <span class="stat-number text-accent" id="statAvgScore">0%</span>
+                    <span class="stat-label">Avg Credibility Score</span>
+                </div>
+            </div>
+
+            <!-- Analytics Chart -->
+            <div class="chart-section glass-card">
+                <div class="card-header">
+                    <div class="header-title">
+                        <i data-lucide="pie-chart"></i>
+                        <h3>Misinformation Ratio Breakdown</h3>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="historyChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+
+            <!-- History Table -->
+            <div class="glass-card history-card">
+                <div class="card-header">
+                    <div class="header-title">
+                        <i data-lucide="clock"></i>
+                        <h3>Recent Scan Records</h3>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary btn-sm" id="refreshHistoryBtn">
+                            <i data-lucide="refresh-cw"></i> Refresh
+                        </button>
+                        <button class="btn btn-danger btn-sm" id="clearHistoryBtn">
+                            <i data-lucide="trash-2"></i> Clear History
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>Headline / Preview</th>
+                                <th>Source</th>
+                                <th>Verdict</th>
+                                <th>Score</th>
+                                <th>Model</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody">
+                            <tr>
+                                <td colspan="7" class="text-center text-muted">No scan records found yet. Run your first analysis!</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ============================================================== -->
+        <!-- TAB 4: BERT ARCHITECTURE & IEEE DATASET -->
+        <!-- ============================================================== -->
+        <section class="tab-panel" id="tab-architecture">
+            <div class="hero-section">
+                <div class="hero-badge"><i data-lucide="layers"></i> Technical Documentation</div>
+                <h1 class="hero-title">How BERT Detects Misinformation</h1>
+                <p class="hero-subtitle">
+                    An in-depth look into Bidirectional Encoder Representations from Transformers and fine-tuning on the IEEE DataPort Fake News dataset.
+                </p>
+            </div>
+
+            <!-- Architecture Diagram Steps -->
+            <div class="architecture-steps">
+                <!-- Step 1 -->
+                <div class="glass-card step-card">
+                    <div class="step-num">01</div>
+                    <div class="step-icon"><i data-lucide="type"></i></div>
+                    <h3>WordPiece Tokenization</h3>
+                    <p>The headline and body text are split into subword tokens with special delimiter markers <code>[CLS]</code> (Classification Token) at the start and <code>[SEP]</code> separating sentences.</p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="glass-card step-card">
+                    <div class="step-num">02</div>
+                    <div class="step-icon"><i data-lucide="network"></i></div>
+                    <h3>Bidirectional Attention</h3>
+                    <p>12 Transformer layers with 12 self-attention heads evaluate words in relation to both left and right context simultaneously, capturing subtle deception and incongruence.</p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="glass-card step-card">
+                    <div class="step-num">03</div>
+                    <div class="step-icon"><i data-lucide="box"></i></div>
+                    <h3>[CLS] Embedding Pooling</h3>
+                    <p>The 768-dimensional hidden state corresponding to the <code>[CLS]</code> token aggregates the semantic representation of the entire news article into a single vector.</p>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="glass-card step-card">
+                    <div class="step-num">04</div>
+                    <div class="step-icon"><i data-lucide="award"></i></div>
+                    <h3>Classification Head</h3>
+                    <p>A linear layer (<code>Linear(768, 2)</code>) followed by Softmax converts the vector into class probabilities for <strong>REAL</strong> vs <strong>FAKE</strong> with calibrated confidence scores.</p>
+                </div>
+            </div>
+
+            <!-- IEEE Dataset & Training Code Section -->
+            <div class="glass-card code-guide-card">
+                <div class="card-header">
+                    <div class="header-title">
+                        <i data-lucide="terminal"></i>
+                        <h3>Training on the IEEE DataPort Fake News Dataset</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p>To fine-tune BERT on the official IEEE DataPort Fake News dataset, follow these simple steps:</p>
+                    <ol class="setup-list">
+                        <li>
+                            <strong>Download Dataset:</strong> Obtain the CSV from 
+                            <a href="https://ieee-dataport.org/documents/fake-news-dataset" target="_blank" rel="noopener">IEEE DataPort Fake News Dataset</a> or Kaggle.
+                        </li>
+                        <li>
+                            <strong>Place CSV in project:</strong> Save the file as <code>data/fake_news_dataset.csv</code>.
+                        </li>
+                        <li>
+                            <strong>Run the fine-tuning script:</strong>
+                            <div class="code-block">
+                                <code>python train_bert.py --data_path data/fake_news_dataset.csv --epochs 3 --batch_size 16</code>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ============================================================== -->
+    <!-- SETTINGS & API KEY MODAL -->
+    <!-- ============================================================== -->
+    <div class="modal-backdrop hidden" id="settingsModal">
+        <div class="glass-card modal-card">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <i data-lucide="key-round"></i>
+                    <h2>LLM Engine & API Settings</h2>
+                </div>
+                <button class="icon-button" id="closeSettingsBtn">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <!-- Provider Selector -->
+                <div class="input-group">
+                    <label for="providerSelect">AI Provider</label>
+                    <select id="providerSelect" class="form-select">
+                        <option value="freellmapi" selected>🌟 FreeLLMAPI (Aggregated Free LLMs / OpenAI Standard)</option>
+                        <option value="gemini">🔷 Google Gemini API</option>
+                        <option value="openai_compatible">🚀 OpenRouter / Groq / Custom Endpoint</option>
+                    </select>
+                </div>
+
+                <div class="api-info-banner" id="providerInfoBanner">
+                    <i data-lucide="info"></i>
+                    <div id="providerInfoText">
+                        <strong>FreeLLMAPI Configuration:</strong>
+                        <p>Insert your FreeLLMAPI key. It routes through OpenAI-compatible free LLM tiers (Llama 3, Mistral, etc.) to perform deep claim verification.</p>
+                    </div>
+                </div>
+
+                <!-- Base URL (for FreeLLMAPI and OpenAI compatible) -->
+                <div class="input-group" id="baseUrlGroup">
+                    <label for="baseUrlInput">API Base URL</label>
+                    <input type="url" id="baseUrlInput" value="https://api.freellmapi.com/v1" placeholder="https://api.freellmapi.com/v1">
+                    <small class="helper-text">Standard OpenAI-compatible base URL (e.g. <code>https://api.freellmapi.com/v1</code>, <code>https://openrouter.ai/api/v1</code>, or <code>http://localhost:11434/v1</code>)</small>
+                </div>
+
+                <!-- API Key -->
+                <div class="input-group">
+                    <label for="apiKeyInput" id="apiKeyLabel">API Key</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="apiKeyInput" placeholder="Enter your API key...">
+                        <button type="button" class="btn-eye" id="toggleApiKeyVisibility">
+                            <i data-lucide="eye" id="eyeIcon"></i>
+                        </button>
+                    </div>
+                    <div class="key-status-msg" id="keyValidationMsg"></div>
+                </div>
+
+                <!-- Model Name -->
+                <div class="input-group">
+                    <label for="modelNameInput" id="modelLabel">Model Identifier</label>
+                    <input type="text" id="modelNameInput" value="llama-3.1-70b" placeholder="e.g. llama-3.1-70b, gpt-3.5-turbo, gemini-2.5-flash">
+                    <small class="helper-text" id="modelHelperText">Popular free models: <code>llama-3.1-70b</code>, <code>mistral-7b-instruct</code>, <code>qwen-2.5-72b</code></small>
+                </div>
+
+                <div class="button-row">
+                    <button class="btn btn-secondary" id="testApiKeyBtn">
+                        <i data-lucide="plug"></i> Test Connection
+                    </button>
+                    <button class="btn btn-primary" id="saveApiKeyBtn">
+                        <i data-lucide="check"></i> Save Credentials
+                    </button>
+                </div>
+
+                <hr class="modal-divider">
+
+                <div class="settings-option">
+                    <div class="option-info">
+                        <strong>Fallback Local BERT Mode</strong>
+                        <p>Automatically fall back to local BERT/stylometric classification if offline.</p>
+                    </div>
+                    <label class="switch-container">
+                        <input type="checkbox" id="localFallbackToggle" checked>
+                        <span class="switch-slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
+
